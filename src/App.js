@@ -6,21 +6,17 @@ import MainSelect from './components/MainSelect'
 
 const conversionCategories = ['mass', 'distance', 'temperature']
 
-const conversionUnits = {
-  [conversionCategories[0]]: ['kg', 'g', 'mg', 'lb'],
-  [conversionCategories[1]]: ['km', 'm', 'mi', 'ft', 'in'],
-  [conversionCategories[2]]: ['k', 'c', 'f']
-}
+
 
 function App() {
-  const [selectedCategory, setselectedCategory] = useState('temperature')
-  const handleMainSelectChange = (e) => {
-    setselectedCategory(e.target.value)
+  const [category, setCategory] = useState('temperature')
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value)
   }
   return (
     <div className="App">
-      <MainSelect categories={conversionCategories} selectedCategory={selectedCategory} onChange={handleMainSelectChange} />
-      <ConversionArea subunits={conversionUnits[selectedCategory]} />
+      <MainSelect categories={conversionCategories} selectedCategory={category} onChange={handleCategoryChange} />
+      <ConversionArea category={category} />
       <FormulaNote formula={'formula comes here'} />
     </div>
   )

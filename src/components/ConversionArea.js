@@ -1,50 +1,74 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import InputEle from './InputEle'
 import SubUnitSelect from './SubUnitSelect'
-import { cTof, cTok, fToc, kToc } from '../conversionFuns/temperature'
+import { fromFuns, toFuns } from '../conversionFuns/commonEntry'
 
-const conversionFunMaptoCommon = {
-  'f': fToc,
-  'k': kToc,
-  'c': (v) => v,
-}
 
-const conversionFunMapfromCommon = {
-  'f': cTof,
-  'k': cTok,
-  'c': (v) => v,
+const conversionUnits = {
+  'mass': ['kg', 'g', 'mg', 'lb'],
+  'distance': ['km', 'm', 'mi', 'ft', 'in'],
+  'temperature': ['k', 'c', 'f']
 }
-const ConversionArea = ({ subunits }) => {
-  const [universalValue, setuniversalValue] = useState('')
-  const [subState1, setSubState1] = useState(subunits[0])
-  const [subState2, setSubState2] = useState(subunits[0])
-  const handleInputChange1 = (e) => {
-    setuniversalValue(conversionFunMaptoCommon[subState1](e.target.value))
+class ConversionArea extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      subUnit1: conversionUnits[props.category][0],
+      subUnit2: conversionUnits[props.category][0],
+      inpVal1: 100,
+      inpVal2: 100,
+      universalValue: 100
+    }
   }
-  const handleInputChange2 = (e) => {
-    setuniversalValue(conversionFunMaptoCommon[subState2](e.target.value))
+  handleInputChange1 = (e) => {
+    this.setState((state, props) => {
+      const uV = toFuns[props.category][state.subUnit1](e.target.value)
+      return { inpVal1: e.target.value, universalValue: uV, inpVal2: fromFuns[props.category][state.subUnit1](uV) }
+    })
   }
-  const handleSubUnitchange1 = (e) => {
-    setSubState1(e.target.value)
+  handleInputChange2 = (e) => {
+    this.setState((state, props) => {
+      const uV = toFuns[props.category][state.subUnit2](e.target.value)
+      return { inpVal2: e.target.value, universalValue: uV, inpVal1: fromFuns[props.category][state.subUnit2](uV) }
+    })
+
   }
-  const handleSubUnitchange2 = (e) => {
-    setSubState2(e.target.value)
+  componentDidUpdate(prevProps) {
+    if (prevProps.category != this.props.category) {
+      this.setState({
+        subUnit1: conversionUnits[this.props.category][0],
+        subUnit2: conversionUnits[this.props.category][0],
+      })
+    }
   }
-  const inpTex1 = conversionFunMapfromCommon[subState1](universalValue)
-  const inpTex2 = conversionFunMapfromCommon[subState2](universalValue)
-  return (
-    <div>
+  handleSubUnitChange1 = (e) => {
+    this.setState((state, props) => {
+      return { subUnit1: e.target.value, inpVal1: fromFuns[props.category][e.target.value](state.universalValue) }
+    })
+  }
+  handleSubUnitChange2 = (e) => {
+    this.setState((state, props) => {
+      return { subUnit2: e.target.value, inpVal2: fromFuns[props.category][e.target.value](state.universalValue) }
+    })
+  }
+  render() {
+    return (
       <div>
-        <InputEle inpTex={inpTex1} onChange={handleInputChange1} />
-        <SubUnitSelect subUnits={subunits} selectedSubunit={subState1} onChange={handleSubUnitchange1} />
+        <div>
+          <InputEle inpTex={this.state.inpVal1} onChange={this.handleInputChange1} />
+          <SubUnitSelect subUnits={conversionUnits[this.props.category]} onChange={this.handleSubUnitChange1} selectedSubunit={this.state.subUnit1} />
+        </div>
+        <span>=</span>
+        <div>
+          <InputEle inpTex={this.state.inpVal2} onChange={this.handleInputChange2} />
+          <SubUnitSelect subUnits={conversionUnits[this.props.category]} onChange={this.handleSubUnitChange2} selectedSubunit={this.state.subUnit2} />
+        </div>
       </div>
-      <span>=</span>
-      <div>
-        <InputEle inpTex={inpTex2} onChange={handleInputChange2} />
-        <SubUnitSelect subUnits={subunits} selectedSubunit={subState2} onChange={handleSubUnitchange2} />
-      </div>
-    </div>
-  )
+    )
+  }
 }
+// const ConversionArea = ({ subUnits, category }) => {
+
+// }
 
 export default ConversionArea
