@@ -3,7 +3,7 @@ export const kgTog = (kg) => {
 }
 
 export const gTokg = (g) => {
-  return (+g * 0.0001)
+  return (+g * 0.001)
 }
 
 export const mgTog = gTokg

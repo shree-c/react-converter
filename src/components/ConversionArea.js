@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import InputEle from './InputEle'
 import SubUnitSelect from './SubUnitSelect'
-import { fromFuns, toFuns } from '../conversionFuns/commonEntry'
+import { fromCommonFuns, toCommonFuns } from '../conversionFuns/commonEntry'
 
 
 const conversionUnits = {
@@ -22,19 +22,19 @@ class ConversionArea extends React.Component {
   }
   handleInputChange1 = (e) => {
     this.setState((state, props) => {
-      const uV = toFuns[props.category][state.subUnit1](e.target.value)
-      return { inpVal1: e.target.value, universalValue: uV, inpVal2: fromFuns[props.category][state.subUnit1](uV) }
+      const uV = toCommonFuns[props.category][state.subUnit1](e.target.value)
+      return { inpVal1: e.target.value, universalValue: uV, inpVal2: fromCommonFuns[props.category][state.subUnit2](uV) }
     })
   }
   handleInputChange2 = (e) => {
     this.setState((state, props) => {
-      const uV = toFuns[props.category][state.subUnit2](e.target.value)
-      return { inpVal2: e.target.value, universalValue: uV, inpVal1: fromFuns[props.category][state.subUnit2](uV) }
+      const uV = toCommonFuns[props.category][state.subUnit2](e.target.value)
+      return { inpVal2: e.target.value, universalValue: uV, inpVal1: fromCommonFuns[props.category][state.subUnit1](uV) }
     })
 
   }
   componentDidUpdate(prevProps) {
-    if (prevProps.category != this.props.category) {
+    if (prevProps.category !== this.props.category) {
       this.setState({
         subUnit1: conversionUnits[this.props.category][0],
         subUnit2: conversionUnits[this.props.category][0],
@@ -43,12 +43,12 @@ class ConversionArea extends React.Component {
   }
   handleSubUnitChange1 = (e) => {
     this.setState((state, props) => {
-      return { subUnit1: e.target.value, inpVal1: fromFuns[props.category][e.target.value](state.universalValue) }
+      return { subUnit1: e.target.value, inpVal1: fromCommonFuns[props.category][e.target.value](state.universalValue) }
     })
   }
   handleSubUnitChange2 = (e) => {
     this.setState((state, props) => {
-      return { subUnit2: e.target.value, inpVal2: fromFuns[props.category][e.target.value](state.universalValue) }
+      return { subUnit2: e.target.value, inpVal2: fromCommonFuns[props.category][e.target.value](state.universalValue) }
     })
   }
   render() {
@@ -67,8 +67,4 @@ class ConversionArea extends React.Component {
     )
   }
 }
-// const ConversionArea = ({ subUnits, category }) => {
-
-// }
-
 export default ConversionArea

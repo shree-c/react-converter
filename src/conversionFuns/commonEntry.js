@@ -1,8 +1,8 @@
 import { cTof, cTok, fToc, kToc } from './temperature'
 import { kgTog, mgTog, lbTog, gTokg, gTolb, gTomg } from './mass'
-
+import { kmTom, miTom, ftTom, inTom, mTokm, mToin, mToft, mTomi } from './distance.js'
 const uselessFun = (v) => v
-const toFuns = {
+const toCommonFuns = {
   //using celsius as common unit
   'temperature': {
     'f': fToc,
@@ -15,10 +15,18 @@ const toFuns = {
     'mg': mgTog,
     'lb': lbTog,
     'g': uselessFun,
+  },
+  //using meter
+  'distance': {
+    'km': kmTom,
+    'mi': miTom,
+    'ft': ftTom,
+    'in': inTom,
+    'm': uselessFun
   }
 }
 
-const fromFuns = {
+const fromCommonFuns = {
   'temperature': {
     'f': cTof,
     'k': cTok,
@@ -29,7 +37,14 @@ const fromFuns = {
     'mg': gTomg,
     'lb': gTolb,
     'g': uselessFun,
+  },
+  'distance': {
+    'km': mTokm,
+    'mi': mTomi,
+    'ft': mToft,
+    'in': mToin,
+    'm': uselessFun,
   }
 }
 
-export { toFuns, fromFuns }
+export { toCommonFuns, fromCommonFuns }
